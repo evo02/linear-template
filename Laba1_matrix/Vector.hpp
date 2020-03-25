@@ -1,79 +1,106 @@
 #pragma once
-#include "Matrix.hpp"
+
 
 template<class T>
 
 class Vector
 {
 public:
+	//default constructor
 	explicit Vector() = default;
+	//constructor for creating vector row length and mem padding
 	explicit Vector(size_t row, T mem) : data_(mem, row) {  }
+
+	//constructor for zero vector row lenght
 	explicit Vector(size_t row) : data_(row) {  }
+
+	//constuctor for creating vector from valarray
 	explicit Vector(std::valarray<T> Arr) : data_(Arr) {  }
+	
+	//destructor
+	~Vector() {  }
 
-	~Vector() {  } //деструктор
-
+	//copy constructor
 	Vector(const Vector &) = default;
+
+	//move constructor
 	Vector(const Vector && pam) : data_(pam.Data) {  }
 
+	//copy assignment operator
+	Vector& operator=(const Vector& pam) { Vector copy(pam); copy.swap(*this); return *this; }
+
+	//move assignment operator
+	Vector& operator=(const Vector&& pam) { pam.swap(*this);  return *this; }
+
+	//operator example(i)
 	T & operator()(size_t Col) { return data_[Col]; }
 	T operator()(size_t Col) const { return data_[Col]; };
+
+	//operator example[i]
 	T& operator[](const size_t index) { return data_[index]; }
 	T& operator[](const size_t index) const { return data_[index]; }
 
-	Vector& operator=(const Vector& pam) { Vector copy(pam); copy.swap(*this); return *this; }
-	Vector& operator=(const Vector&& pam) { pam.swap(*this);  return *this; }
 
-	Vector slice(const size_t start, const size_t stop, const size_t step) //Slice for vector, нужен тест
+	//access to vector class values
+	std::valarray<T> data() const { return data_; }
+	size_t size() const { return data_.size(); }
+
+
+	//slice for vector
+	Vector slice(const size_t start, const size_t stop, const size_t step) { return data_[std::slice(start, stop, step)]; }
+
+
+	//map for vector
+	Vector map(T _Func(T)) const
 	{
-		return data_[std::slice(start, stop, step)];
+		Vector<T> other = *this;  
+		for (T &i : other.data_)  //range-based for loop, since C++11
+			i = _Func(i);
+		return other;
+	}
+	Vector map(T _Func(const T&)) const
+	{
+		Vector<T> res = *this;
+		for (T &i : res.data_)
+			i = _Func(i);
+		return res;
 	}
 
-	Vector map(T _Func(T))
+	//apply for vector
+	Vector apply(T _Func(T))
 	{
-		Vector res = *this;
-		return _Func(res.data_);
+		for (T &i : data_)
+			i = _Func(i);
+		return *this;
 	}
-	
-	Vector apply(T _Func(T)) const
+	Vector apply(T _Func(const T&))
 	{
-		*this->data_ = *this->data_.apply(_Func(T));
+		for (T &i : data_)
+			i = _Func(i);
 		return *this;
 	}
 
+	//static linespace
 	static Vector linespace(T start, T end, size_t size)
 	{
 		size_t lenght = (end - start) / (size - 1);
 		std::valarray <T> res;
-		for (size_t i(0); i < size - 1; ++i)
+		for (size_t i{ 0 }; i < size - 1; ++i)
 			res[i] = start + i * lenght;
 		return Vector(res);
 	}
 	
+	//overload operators for scalars
+	Vector& operator*=(const T scalar) { data_ *= scalar; return *this; }
+	Vector& operator/=(const T scalar) { data_ /= scalar; return *this; }
+	Vector& operator-=(const T scalar) { data_ -= scalar; return *this; }
+	Vector& operator+=(const T scalar) { data_ += scalar; return *this; }
 
-
-	/*_NODISCARD valarray apply(_Ty _Func(_Ty)) const
-	{	// return valarray transformed by _Func, value argument
-		valarray<_Ty> _Ans(size()); ;
-		for (size_t _Idx = 0; _Idx < _Ans.size(); ++_Idx)
-			_Ans[_Idx] = _Func(_Myptr[_Idx]);
-			return (_Ans);
-	}
-
-	_NODISCARD valarray apply(_Ty _Func(const _Ty&)) const
-	{	// return valarray transformed by _Func, nonmutable argument
-		_VALOP(_Ty, size(), _Func(_Myptr[_Idx]));
-	}*/
-
-
-
-
-
-
-	//Доступ к значениям класса для считывания
-	std::valarray<T> data() const { return data_; }
-	size_t size() const { return data_.size; }
-
+	//operators for vector&vector
+	Vector& operator+=(const Vector& pam) { data_ += pam;  return *this; }
+	Vector& operator-=(const Vector& pam) { data_ -= pam;  return *this; }
+	Vector& operator/=(const Vector& pam) { data_ /= pam;  return *this; }
+	Vector& operator*=(const Vector& pam) { *this = std::move(*this * pam); return *this; }
 
 
 

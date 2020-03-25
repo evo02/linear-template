@@ -1,66 +1,75 @@
 #pragma once
-#include <iostream>
-#include <vector>
-#include <valarray>
-#include <cmath>
-#include <algorithm>
-#include <cstdio>
-#include <iterator>
-#include <tuple>
-#include <ostream>
-#include <fstream>
-#include "Vector.hpp"
+
 
 
 template<typename T>
 
 class Matrix {
 public:
-	explicit Matrix() = default;                  //конструктор по умолчанию
+	//default constructor
+	explicit Matrix() = default;                  
 	
-	explicit Matrix(size_t rows, std::valarray<T> data) : rows_(rows), cols_(data.size() / rows), data_(data) {  }
+	//
+	explicit Matrix(size_t rows, std::valarray<T> data) : rows_(rows), cols_(data.size() / rows), data_(data) { if (data.size() % rows != 0) throw Matrix_WrongSize{}; }
 
-	explicit Matrix(size_t rows, std::size_t columns) : rows_(rows), cols_(columns), data_(rows * columns) {  }
+	//constructor for zero matrix
+	explicit Matrix(size_t rows, size_t columns) : rows_(rows), cols_(columns), data_(rows * columns) {  }
 
-	template<typename U> explicit Matrix(size_t rows, std::size_t columns, const U auth) : rows_(rows), cols_(columns), data_(auth, rows * columns) {  }	
+	//constructor to fill the matrix with the same elements "auth"
+	explicit Matrix(size_t rows, size_t columns, const T auth) : rows_(rows), cols_(columns), data_(auth, rows * columns) {  }
 
-	explicit Matrix(size_t rows, std::size_t columns, std::valarray<T> data) : rows_(rows), cols_(columns), data_(data) {}
+	//constructor for creating a matrix with the number of rows, columns and valarray
+	explicit Matrix(size_t rows, size_t columns, std::valarray<T> data) : rows_(rows), cols_(columns), data_(data) {  }
 
-	~Matrix() {  } //деструктор
+	// vector to matrix for overload operators(vector-column)
+	explicit Matrix(Vector<T> vect) : rows_(vect.size()), cols_(1), data_(vect.data()) {  }
 
-	Matrix(const Matrix &) = default;         //конструктор копирования
 
-	Matrix(const Matrix &&pam) : rows_(pam.Rows()), cols_(pam.Cols()), data_(pam.Array()) //конструктор перемещения
+	//destructor
+	~Matrix() {  } 
+
+	//copy constructor
+	Matrix(const Matrix &) = default;         
+
+	//move constructor
+	Matrix(const Matrix &&pam) : rows_(pam.Rows()), cols_(pam.Cols()), data_(pam.Array()) 
 	{
 		rows_ = pam.Rows();
 		cols_ = pam.Cols();
 		data_ = pam.Array();
 	}          
 
-	Matrix& operator=(const Matrix& pam) = default;
-	Matrix& operator=(const Matrix&& pam) { rows_ = pam.Rows(); cols_ = pam.Cols(); data_ = pam.Array();  return *this; }
+	//copy assignment operator
+	Matrix& operator=(const Matrix& pam) = default;  
+
+	//move assignment operator
+	Matrix& operator=(const Matrix&& pam) { rows_ = pam.Rows(); cols_ = pam.Cols(); data_ = pam.Array();  return *this; } 
 
 
-	//Доступ к значениям класса для считывания
+	//access to matrix class values
 	size_t Rows() const { return rows_; }
 	size_t Cols() const { return cols_; }         
 	std::valarray<T> Array() const { return data_; }
 
-	//slices для задания и в помощь 
-	std::valarray<T> row(size_t r) const { return data_[std::slice(r * Cols(), Cols(), 1)]; }
-	std::valarray<T> col(size_t c) const { return data_[std::slice(c, Rows(), Cols())]; }
 
-	std::slice_array<T> row(size_t r) { return data_[std::slice(r * Cols(), Cols(), 1)]; }
-	std::slice_array<T> col(size_t c) { return data_[std::slice(c, Rows(), Cols())]; }
-
-
-
+	//operator(m, n)
 	T & operator()(size_t Row, size_t Col) { return data_[Row * cols_ + Col]; }
 	T operator()(size_t Row, size_t Col) const { return data_[Row * cols_ + Col]; };
+
+
+	//operator[m x n], 
+	//for example in matrix
+	//1 2 3
+	//4 5 6
+	//7 8 9
+	//example[7] = 8, numbering as in valarray
 	T& operator[](const size_t index) { return data_[index]; }
 	T& operator[](const size_t index) const { return data_[index]; }
 
-	Matrix transpose() //транспонирование
+
+
+	//matrix transpose method
+	Matrix transpose()
 	{
 		Matrix<T> result(cols_, rows_);
 		for (std::size_t i = 0; i < rows_; ++i)
@@ -68,32 +77,86 @@ public:
 		return result;
 	}
 
-	template<typename U> Matrix& operator*=(const U scalar) { data_ *= scalar; return *this; }
-	Matrix& operator*=(const Matrix& pam) { *this = std::move(*this * pam); return *this; }
-	template<typename U>Matrix& operator*=(const Vector<T>& pam) { *this = std::move(*this * pam); return *this; }
+
+	//operation apply for apply any function elementwise
+	Matrix apply(T _Func(T))
+	{
+		for (T &i : data_)//range-based for loop, since C++11
+			i = _Func(i);
+		return *this;
+	}
+	Matrix apply(T _Func(const T&))
+	{
+		for (T &i : data_)
+			i = _Func(i);
+		return *this;
+	}
+
+
+	//operation map with which you can apply element-wise any function to a copy of the matrix
+	Matrix map(T _Func(T)) const
+	{
+		Matrix<T> res = *this;  
+		for (T &i : res.data_) 
+			i = _Func(i);
+		return res;
+	}
+	Matrix map(T _Func(const T&)) const
+	{
+		Matrix<T> res = *this;
+		for (T &i : res.data_)
+			i = _Func(i);
+		return res;
+	}
+
+
+	//numpy slice analog for matrix
+	Matrix slice(const size_t row_begin, const size_t row_end, const size_t row_step,
+		const size_t column_begin, const size_t column_end, const size_t column_step) const
+	{
+		size_t r = (size_t)ceil((row_end - row_begin) / row_step);
+		size_t c = (size_t)ceil((column_end - column_begin) / column_step);
+		Matrix<T> res(r, c);
+		for (size_t i{ row_begin }, m{ 0 }; i < row_end; i += row_step, ++m)
+			for (size_t j{ column_begin }, n{ 0 }; j < column_end; j += column_step, ++n)
+
+				res[m*c + n] = data_[i*c + j];
+		return res;
+	}
+
+	//slices
+	std::valarray<T> row(size_t r) const { return data_[std::slice(r * Cols(), Cols(), 1)]; }
+	std::valarray<T> col(size_t c) const { return data_[std::slice(c, Rows(), Cols())]; }
+
+	std::slice_array<T> row(size_t r) { return data_[std::slice(r * Cols(), Cols(), 1)]; }
+	std::slice_array<T> col(size_t c) { return data_[std::slice(c, Rows(), Cols())]; }
+
+	
+	//overload operators for scalars
+	Matrix& operator*=(const T scalar) { data_ *= scalar; return *this; }
+	Matrix& operator/=(const T scalar) { data_ /= scalar; return *this; }
+	Matrix& operator-=(const T scalar) { data_ -= scalar; return *this; }
+	Matrix& operator+=(const T scalar) { data_ += scalar; return *this; }
 
 
 
+	//overload operator for matrix to vector multilpication
+	Matrix& operator*=(const Vector<T>& pam) { *this = std::move(*this * pam); return *this; }
+
+
+	//overload operators for matrix x matrix
 	Matrix& operator+=(const Matrix& pam) { data_ += pam;  return *this;  }
 	Matrix& operator-=(const Matrix& pam) { data_ -= pam;  return *this;  }
 	Matrix& operator/=(const Matrix& pam) { data_ /= pam;  return *this; }
+	Matrix& operator*=(const Matrix& pam) { *this = std::move(*this * pam); return *this; }
+	
 
-	//итераторы
-	auto begin() { return data_.begin(); } 
-	auto begin() const { return data_.begin(); }
-	auto end() { return data_.end(); }            
-	auto end() const { return data_.end(); }
-
-	//для удобства индексирования
-	const size_t index(const size_t row, const size_t column) const { return row * cols_ + column; }  
-
-
-
-protected:
-	std::size_t rows_; //строки
-	std::size_t cols_; //столбцы
-	std::valarray<T> data_;
+private:
+	std::size_t rows_; //rows
+	std::size_t cols_; //columns
+	std::valarray<T> data_; //array
 };
 
 
-#include "Matrix.inl"
+
+

@@ -120,9 +120,11 @@
     <ClInclude Include="Vector.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="exceptions.inl" />
     <None Include="Matrix.inl" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="connect.hpp" />
     <ClCompile Include="test.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

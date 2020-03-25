@@ -1,6 +1,5 @@
-#include "Output.hpp"
-#include "Matrix.hpp"
-#include "Vector.hpp"
+#include "connect.hpp"
+
 void testConstructors() {
 
 	std::cout << "\n\n\nRunning Constructor Tests\n\n";
@@ -14,7 +13,7 @@ void testConstructors() {
 		"std::valarray<T> data);\n";
 	Matrix<int> m1(x, y, v);
 	Matrix<int> gsg(m1);
-	std::cout << m1(1, 0) << " " << gsg[11] << std::endl;
+	std::cout << "(0, 0)" << m1(1, 3) << " []" << gsg[11] << std::endl;
 	i.m2dToText(std::cout, m1);
 	std::cout << "number of rows: " << m1.Rows() << '\n'
 		<< "number of cols: " << m1.Cols() << '\n'
@@ -38,6 +37,46 @@ void testConstructors() {
 		<< "matrix content:\n";
 	i.m2dToText(std::cout, m3);
 }
+int square(int a) { return a * 5; }
+
+
+void testOperators()
+{
+	std::cout << "\n\n\nTest operator* for matrix*matrix:\n\n";
+	int a[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
+	int b[] = { 12, 11, 10, 9 };
+	int c[] = { 1,2,3,4 };
+	int e[] = { 1,1,1,1,1,1,1,1,1 };
+	std::valarray<int> one(e, 9);
+	std::valarray<int> v(a, 12);
+	std::valarray<int> v1(b, 4);
+	std::valarray<int> v2(c, 4);
+	Matrix<int> threexfour(3, 4, v);
+	Matrix<int> fourxfive(4, 3, v);
+	Matrix<int> threexfour2(threexfour);
+	Matrix<int> edin(3, 3, one);
+	Vector<int> pam(v1);
+	Matrix<int> bam(1, 4, v2);
+	matrix2dio<int> i;
+	//threexfour *= pam;
+	threexfour2 *= fourxfive;
+	Matrix<int> sdfsdf(4, 4); sdfsdf = pam * bam;
+	Matrix<int> blya(3, 3, 5);
+	//edin = { edin + blya };
+	i.m2dToText(std::cout, threexfour);
+	i.m2dToText(std::cout, threexfour2);
+	i.m2dToText(std::cout, sdfsdf);
+	i.m2dToText(std::cout, blya.map(square));
+	i.m2dToText(std::cout, blya);
+	blya.apply(square);
+	i.m2dToText(std::cout, blya);
+	i.m2dToText(std::cout, threexfour2.slice(0, 2, 2, 0, 2, 1));
+	i.m2dToText(std::cout, fourxfive);
+
+	i.m2dToText(std::cout, fourxfive.slice(0, 2, 1, 0, 3, 1));
+}
+
+
 
 void testRowsAndCols() {
 
@@ -115,6 +154,7 @@ void testGenerators() {
 
 	int a[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
 	int b[] = { 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120 };
+	
 	std::valarray<int> v1(a, 12);
 	std::valarray<int> v2(b, 12);
 	std::size_t x = 3, y = 4;
@@ -143,13 +183,12 @@ void testGenerators() {
 void testMatrix2d() {
 
 	testConstructors();
-	testRowsAndCols();
-	testGenerators();
+	testOperators();
 }
 
 
 int main(int argc, char** argv) {
 
 	testMatrix2d();
-	return (EXIT_SUCCESS);
+ 	return (EXIT_SUCCESS);
 }

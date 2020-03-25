@@ -1,11 +1,12 @@
+#pragma once
 
-template<class T, class U>
-Matrix<T> operator*(const Matrix<T>& leftMatrix, const Matrix<U>& rightMatrix)  //умножение матриц друг на друга
+template<class T>
+Matrix<T> operator*(const Matrix<T>& leftMatrix, const Matrix<T>& rightMatrix)  //matrix multiplication
 {
 	Matrix<T> res(leftMatrix.Rows(), rightMatrix.Cols());
 	for (size_t wlv(0); wlv < res.Rows(); ++wlv)
 	{
-		for (size_t column(0); column < res.Rows(); ++column)
+		for (size_t column(0); column < res.Cols(); ++column)
 		{
 			for (size_t i(0); i < leftMatrix.Cols(); ++i)
 			{
@@ -17,43 +18,80 @@ Matrix<T> operator*(const Matrix<T>& leftMatrix, const Matrix<U>& rightMatrix)  
 	return res;
 }
 
-template<class T, class U>
-Matrix<T> operator*(const  Matrix<T>& leftMatrix, const Vector<U>& RightPam)
+template<class T>
+Matrix<T> operator*(const  Matrix<T>& leftMatrix, const Vector<T>& RightVec) //it is work !!!!!
 {
-	//check that matrix cols_ == vector.height
-	Matrix<T> res(1, RightPam.Height());
-	for (size_t column(0); column < res.Rows(); ++column)
-	{
-		for (size_t i(0); i < leftMatrix.Cols(); ++i)
-		{
-			res(1, column) += leftMatrix(1, i) * RightPam(i, column);
-		}////?!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	}
+	Matrix<T> rightMatrix(RightVec); //
+	return leftMatrix * rightMatrix;
+}
+
+template<class T>
+Matrix<T> operator*(const Vector<T>& leftVec, const  Matrix<T>& rightMatrix) //it is work !!!!!
+{
+	Matrix<T> leftMatrix(leftVec); //
+	return leftMatrix * rightMatrix;
+}
+
+template<class T>
+Matrix<T> operator*(const Matrix<T>& leftMatrix, const  T& scalar) //it is work !!!!!
+{
+	Matrix<T> res(leftMatrix.Rows(), leftMatrix.Cols(), leftMatrix.Array()*scalar);
 	return res;
 }
 
-template<class T, class U>
-Matrix<T> operator+(const Matrix<T>& leftMatrix, const Matrix<U>& rightMatrix)
+template<class T>
+Matrix<T> operator*(const  T& scalar, const  Matrix<T>& rightMatrix) //it is work !!!!!
 {
-	/*if (leftMatrix.GetRowCount() != rightMatrix.GetRowCount())
+	Matrix<T> res(rightMatrix.Rows(), rightMatrix.Cols(), rightMatrix.Array()*scalar);
+	return res;
+}
+
+
+template<class T>
+Matrix<T> operator+(const Matrix<T>& leftMatrix, const Matrix<T>& rightMatrix)
+{
+	if (leftMatrix.Rows() != rightMatrix.Rows())
 	{
 		throw Matrix_DifferentRowCount{};
 	}
-	else if (leftMatrix.GetColumnCount() != rightMatrix.GetColumnCount())
+	else if (leftMatrix.Cols() != rightMatrix.Cols())
 	{
 		throw Matrix_DifferentColumnCount{};
-	}*/
-
-	Matrix<T> res(leftMatrix.Rows(), rightMatrix.Cols());
-	auto resIt{ res.begin() };
-	auto it1{ leftMatrix.begin() };
-	auto it2{ rightMatrix.begin() };
-
-	while (resIt != res.end())
-	{
-		*resIt++ = *it1++ + *it2++;
 	}
 
+	Matrix<T> res(leftMatrix.Rows(), rightMatrix.Cols(), leftMatrix.Array()+rightMatrix.Array());
+	return res;
+}
+
+template<class T>
+Matrix<T> operator-(const Matrix<T>& leftMatrix, const Matrix<T>& rightMatrix)
+{
+	if (leftMatrix.Rows() != rightMatrix.Rows())
+	{
+		throw Matrix_DifferentRowCount{};
+	}
+	else if (leftMatrix.Cols() != rightMatrix.Cols())
+	{
+		throw Matrix_DifferentColumnCount{};
+	}
+
+	Matrix<T> res(leftMatrix.Rows(), rightMatrix.Cols(), leftMatrix.Array() - rightMatrix.Array());
+	return res;
+}
+
+template<class T>
+Matrix<T> operator/(const Matrix<T>& leftMatrix, const Matrix<T>& rightMatrix)
+{
+	if (leftMatrix.Rows() != rightMatrix.Rows())
+	{
+		throw Matrix_DifferentRowCount{};
+	}
+	else if (leftMatrix.Cols() != rightMatrix.Cols())
+	{
+		throw Matrix_DifferentColumnCount{};
+	}
+
+	Matrix<T> res(leftMatrix.Rows(), rightMatrix.Cols(), leftMatrix.Array() / rightMatrix.Array());
 	return res;
 }
 
@@ -91,3 +129,4 @@ bool operator!=(const Matrix<T>& leftMatrix, const Matrix<T>& rightMatrix)
 {
 	return !(leftMatrix == rightMatrix);
 }
+

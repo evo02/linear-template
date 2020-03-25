@@ -1,11 +1,6 @@
 #pragma once
-#include <vector>
-#include <iostream>
-#include <istream>
-#include <iterator>
-#include "Matrix.hpp"
-#include "Vector.hpp"
 
+typedef std::istream_iterator<int> int_istrm_iter;
 
 template<class T>
 class matrix2dio {
@@ -16,8 +11,6 @@ public:
 	void m2dToText(std::ostream & os, const Matrix<T> & m);
 	void printValarray(std::ostream & os, const std::valarray<int> & va);
 };
-
-typedef std::istream_iterator<int> int_istrm_iter;
 
 template<class T>
 Matrix<T> matrix2dio<T>::textToM2d(std::istream & is, size_t w) {
