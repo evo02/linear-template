@@ -39,34 +39,15 @@ void testConstructors() {
 	int a[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 };
 	std::valarray<int> v(a, 12);
 	std::size_t x = 3, y = 4;
-	std::cout <<
-		"\nTesting: Matrix(std::size_t rows, std::size_t columns, "
-		"std::valarray<T> data);\n";
 	Matrix<int> m1(x, y, v);
 	Matrix<int> gsg(m1);
-	std::cout << "(0, 0)" << m1(1, 3) << " []" << gsg[11] << std::endl;
-	//i.m2dToText(std::cout, m1);
-	std::cout << "number of rows: " << m1.Rows() << '\n'
-		<< "number of cols: " << m1.Cols() << '\n'
-		<< "matrix content:\n";
-	//i.m2dToText(std::cout, m1);
-
-	std::cout << "\nTesting: Matrix(std::size_t rows, std::size_t columns);\n";
 	Matrix<int> m2(x, y);
-
-	std::cout << "number of rows: " << m2.Rows() << '\n'
-		<< "number of cols: " << m2.Cols() << '\n'
-		<< "matrix content:\n";
-	//i.m2dToText(std::cout, m2);
-
 	std::cout <<
 		"\nTesting: Matrix(std::size_t rows, std::valarray<T> data);\n";
 	Matrix<int> m3(x, v);
-
 	std::cout << "number of rows: " << m3.Rows() << '\n'
 		<< "number of cols: " << m3.Cols() << '\n'
-		<< "matrix content:\n";
-	//i.m2dToText(std::cout, m3);
+		<< "matrix content:\n" << m3 << endl <<endl;
 }
 int peace(int a) { return a * 9; }
 

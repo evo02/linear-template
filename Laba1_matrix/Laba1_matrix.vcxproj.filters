@@ -15,28 +15,28 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Matrix.hpp">
-      <Filter>Исходные файлы</Filter>
-    </ClInclude>
     <ClInclude Include="Vector.hpp">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
     <ClInclude Include="puts.hpp">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
+    <ClInclude Include="Matrix.hpp">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Matrix.inl">
-      <Filter>Исходные файлы</Filter>
-    </None>
-    <None Include="exceptions.inl">
-      <Filter>Исходные файлы</Filter>
-    </None>
     <None Include="in.csv">
       <Filter>Файлы ресурсов</Filter>
     </None>
     <None Include="out.csv">
       <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="Matrix.inl">
+      <Filter>Файлы заголовков</Filter>
+    </None>
+    <None Include="exceptions.inl">
+      <Filter>Файлы заголовков</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
