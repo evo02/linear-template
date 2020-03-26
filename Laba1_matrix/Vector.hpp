@@ -24,7 +24,7 @@ public:
 	Vector(const Vector &) = default;
 
 	//move constructor
-	Vector(const Vector && pam) : data_(pam.Data) {  }
+	Vector(const Vector && pam) : data_(pam.data()) {  }
 
 	//copy assignment operator
 	Vector& operator=(const Vector& pam) { Vector copy(pam); copy.swap(*this); return *this; }
@@ -38,7 +38,7 @@ public:
 
 	//operator example[i]
 	T& operator[](const size_t index) { return data_[index]; }
-	T& operator[](const size_t index) const { return data_[index]; }
+	const T& operator[](const size_t index) const { return data_[index]; }
 
 
 	//access to vector class values
@@ -66,6 +66,7 @@ public:
 		return res;
 	}
 
+
 	//apply for vector
 	Vector apply(T _Func(T))
 	{
@@ -83,25 +84,41 @@ public:
 	//static linespace
 	static Vector linespace(T start, T end, size_t size)
 	{
-		size_t lenght = (end - start) / (size - 1);
-		std::valarray <T> res;
-		for (size_t i{ 0 }; i < size - 1; ++i)
+		T lenght = (end - start) / (size - 1);
+		std::valarray <T> res(size);
+		res[0] = start;
+		for (size_t i{ 0 }; i < size ; ++i)
 			res[i] = start + i * lenght;
+		res[size-1] = end;
 		return Vector(res);
 	}
-	
+
+
 	//overload operators for scalars
 	Vector& operator*=(const T scalar) { data_ *= scalar; return *this; }
 	Vector& operator/=(const T scalar) { data_ /= scalar; return *this; }
 	Vector& operator-=(const T scalar) { data_ -= scalar; return *this; }
 	Vector& operator+=(const T scalar) { data_ += scalar; return *this; }
 
-	//operators for vector&vector
-	Vector& operator+=(const Vector& pam) { data_ += pam;  return *this; }
-	Vector& operator-=(const Vector& pam) { data_ -= pam;  return *this; }
-	Vector& operator/=(const Vector& pam) { data_ /= pam;  return *this; }
-	Vector& operator*=(const Vector& pam) { *this = std::move(*this * pam); return *this; }
+	Vector operator*(const T scalar) { Vector<T> pam(data_ * scalar); return pam; }
+	Vector operator/(const T scalar) { Vector<T> pam(data_ / scalar); return pam; }
+	Vector operator-(const T scalar) { Vector<T> pam(data_ - scalar); return pam; }
+	Vector operator+(const T scalar) { Vector<T> pam(data_ + scalar); return pam; }
 
+
+	//operators for vector&vector
+	Vector& operator+=(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } *this += pam;  return *this; }
+	Vector& operator-=(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } *this -= pam;  return *this; }
+	Vector& operator/=(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } *this /= pam;  return *this; }
+	Vector& operator*=(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } *this *= pam;  return *this; }
+
+	Vector operator+(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } Vector<T> res(data_ + pam.data());  return res; }
+	Vector operator-(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } Vector<T> res(data_ - pam.data());  return res; }
+	Vector operator/(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } Vector<T> res(data_ / pam.data());  return res; }
+	Vector operator*(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } Vector<T> res(data_ * pam.data());  return res; }
+
+	bool operator==(const Vector& pam) { data_ == pam.data() ? true : false; }
+	bool operator!=(const Vector& pam) { data_ != pam.data() ? true : false; }
 
 
 private:

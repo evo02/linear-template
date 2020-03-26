@@ -64,7 +64,7 @@ public:
 	//7 8 9
 	//example[7] = 8, numbering as in valarray
 	T& operator[](const size_t index) { return data_[index]; }
-	T& operator[](const size_t index) const { return data_[index]; }
+	const T& operator[](const size_t index) const { return data_[index]; }
 
 
 
@@ -150,6 +150,9 @@ public:
 	Matrix& operator/=(const Matrix& pam) { data_ /= pam;  return *this; }
 	Matrix& operator*=(const Matrix& pam) { *this = std::move(*this * pam); return *this; }
 	
+
+	//stream operators
+	//friend std::ostream& operator<<(std::ostream &, const Matrix<T> &);
 
 private:
 	std::size_t rows_; //rows

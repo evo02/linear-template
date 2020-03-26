@@ -3,17 +3,12 @@
 template<class T>
 Matrix<T> operator*(const Matrix<T>& leftMatrix, const Matrix<T>& rightMatrix)  //matrix multiplication
 {
+	if (leftMatrix.Cols() != rightMatrix.Rows()) { throw Matrix_RowColumnMismatch{}; }
 	Matrix<T> res(leftMatrix.Rows(), rightMatrix.Cols());
-	for (size_t wlv(0); wlv < res.Rows(); ++wlv)
-	{
-		for (size_t column(0); column < res.Cols(); ++column)
-		{
-			for (size_t i(0); i < leftMatrix.Cols(); ++i)
-			{
-				res(wlv, column) += leftMatrix(wlv, i) * rightMatrix(i, column);
-			}
-		}
-	}
+	for (size_t r{ 0 }; r < res.Rows(); ++r)
+		for (size_t c(0); c < res.Cols(); ++c)
+			for (size_t i{ 0 }; i < leftMatrix.Cols(); ++i)
+				res(r, c) += leftMatrix(r, i) * rightMatrix(i, c);
 
 	return res;
 }
@@ -50,31 +45,18 @@ Matrix<T> operator*(const  T& scalar, const  Matrix<T>& rightMatrix) //it is wor
 template<class T>
 Matrix<T> operator+(const Matrix<T>& leftMatrix, const Matrix<T>& rightMatrix)
 {
-	if (leftMatrix.Rows() != rightMatrix.Rows())
-	{
-		throw Matrix_DifferentRowCount{};
-	}
-	else if (leftMatrix.Cols() != rightMatrix.Cols())
-	{
-		throw Matrix_DifferentColumnCount{};
-	}
-
+	if (leftMatrix.Rows() != rightMatrix.Rows()) { throw Matrix_DifferentRowCount{}; }
+	else if (leftMatrix.Cols() != rightMatrix.Cols()) { throw Matrix_DifferentColumnCount{}; }
 	Matrix<T> res(leftMatrix.Rows(), rightMatrix.Cols(), leftMatrix.Array()+rightMatrix.Array());
 	return res;
 }
 
+
 template<class T>
 Matrix<T> operator-(const Matrix<T>& leftMatrix, const Matrix<T>& rightMatrix)
 {
-	if (leftMatrix.Rows() != rightMatrix.Rows())
-	{
-		throw Matrix_DifferentRowCount{};
-	}
-	else if (leftMatrix.Cols() != rightMatrix.Cols())
-	{
-		throw Matrix_DifferentColumnCount{};
-	}
-
+	if (leftMatrix.Rows() != rightMatrix.Rows()) { throw Matrix_DifferentRowCount{}; }
+	else if (leftMatrix.Cols() != rightMatrix.Cols()){ throw Matrix_DifferentColumnCount{}; }
 	Matrix<T> res(leftMatrix.Rows(), rightMatrix.Cols(), leftMatrix.Array() - rightMatrix.Array());
 	return res;
 }
@@ -82,15 +64,8 @@ Matrix<T> operator-(const Matrix<T>& leftMatrix, const Matrix<T>& rightMatrix)
 template<class T>
 Matrix<T> operator/(const Matrix<T>& leftMatrix, const Matrix<T>& rightMatrix)
 {
-	if (leftMatrix.Rows() != rightMatrix.Rows())
-	{
-		throw Matrix_DifferentRowCount{};
-	}
-	else if (leftMatrix.Cols() != rightMatrix.Cols())
-	{
-		throw Matrix_DifferentColumnCount{};
-	}
-
+	if (leftMatrix.Rows() != rightMatrix.Rows()){ throw Matrix_DifferentRowCount{}; }
+	else if (leftMatrix.Cols() != rightMatrix.Cols()){ throw Matrix_DifferentColumnCount{}; }
 	Matrix<T> res(leftMatrix.Rows(), rightMatrix.Cols(), leftMatrix.Array() / rightMatrix.Array());
 	return res;
 }
@@ -100,15 +75,10 @@ template<class T>
 bool operator==(const Matrix<T>& leftMatrix, const Matrix<T>& rightMatrix)
 {
 	if (&leftMatrix == &rightMatrix)
-	{
 		return true;
-	}
 
-	if (leftMatrix.Rows() != rightMatrix.Rows() ||
-		leftMatrix.Cols() != rightMatrix.Cols())
-	{
+	if (leftMatrix.Rows() != rightMatrix.Rows() || leftMatrix.Cols() != rightMatrix.Cols())
 		return false;
-	}
 
 	auto leftIt{ leftMatrix.begin() };
 	auto rightIt{ rightMatrix.begin() };

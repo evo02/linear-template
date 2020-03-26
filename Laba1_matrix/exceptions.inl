@@ -1,6 +1,19 @@
 
 #pragma once
 
+
+class Vector_Exception : std::exception
+{
+public:
+	Vector_Exception(const char* msg) : std::exception(msg) {};
+};
+
+class Vector_WrongSize : Vector_Exception
+{
+public:
+	Vector_WrongSize() : Vector_Exception("Size of Vector must be value must be the same") {  }
+};
+
 class Matrix_Exception : std::exception
 {
 public:

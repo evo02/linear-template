@@ -9,10 +9,19 @@
 #include <iterator>
 #include <tuple>
 #include <ostream>
+#include <istream>
 #include <fstream>
+#include <iostream>
+#include <string>
+#include <sstream>
+#include <cassert>
+#include <cstdlib>
 
-#include "Vector.hpp"
+
 #include "exceptions.inl"
+#include "Vector.hpp"
 #include "Matrix.hpp"
-#include "Output.hpp"
 #include "Matrix.inl"
+#include "puts.hpp"
+
+

@@ -18,10 +18,10 @@
     <ClInclude Include="Matrix.hpp">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="Output.hpp">
+    <ClInclude Include="Vector.hpp">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="Vector.hpp">
+    <ClInclude Include="puts.hpp">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
@@ -31,6 +31,12 @@
     </None>
     <None Include="exceptions.inl">
       <Filter>Исходные файлы</Filter>
+    </None>
+    <None Include="in.csv">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="out.csv">
+      <Filter>Файлы ресурсов</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
