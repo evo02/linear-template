@@ -50,16 +50,16 @@
     <None Include="MethodAmain.csv">
       <Filter>Файлы ресурсов</Filter>
     </None>
-    <None Include="MethodAsubs.csv">
+    <None Include="A.csv">
       <Filter>Файлы ресурсов</Filter>
     </None>
-    <None Include="MethodBmain.csv">
+    <None Include="Asubs.csv">
       <Filter>Файлы ресурсов</Filter>
     </None>
-    <None Include="MethodBsubs.csv">
+    <None Include="B.csv">
       <Filter>Файлы ресурсов</Filter>
     </None>
-    <None Include="SpeedsOfMethodAmain.csv">
+    <None Include="Bsubs.csv">
       <Filter>Файлы ресурсов</Filter>
     </None>
   </ItemGroup>

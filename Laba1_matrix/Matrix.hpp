@@ -73,7 +73,7 @@ public:
 
 
 
-	//matrix transpose method
+	//matrix transpose mode
 	Matrix transpose()
 	{
 		Matrix<T> result(cols_, rows_);

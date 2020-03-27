@@ -6,73 +6,66 @@ using std::valarray;
 using std::slice_array;
 using std::endl;
 
+//speed calculation
+/*void MakeSpeedDiagram(std::string filename, double h, double number_of_steps, double start_t, const Matrix<double>& result) {
+	std::ofstream file(filename);
+	LVOde ode;
+	double current_time = start_t;
+	for (size_t i{ 0 }; i < result. + 1; i++) {
+		file << current_time << ";" << ode(current_time, result[i]);
+		current_time += h;
+	}
+	file.close();
+}*/
+
 void testSecond()
 {
-	//инициализация необходимых данных требуемыми в задании
 	Vector<double> prev_s = { 1.0, 1.0 };
-	//Matrix<double> prev_s(pam);
 	double start_t = 0, final_t = 10;
-	//произвольно возьмем достаточно маленький шаг для получения достаточной точности
 	double h = 0.01;
-	int quantity_of_steps = (final_t - start_t) / h;
-	//для каждого из доступных вариантов интегрирования реализуем подсчеты и занесем из в файл
-	//для метода А с вектором b_main
+	size_t number_of_steps = (size_t)(final_t - start_t) / h;
+
+	//RK A with 'b_main'
 	RKIntegrator<LVOde, RKMethodA> integrator;
-	Matrix<double> result(integrator.NSteps(start_t, quantity_of_steps, h, prev_s, 1));
-	std::ofstream file("MethodAmain.csv");
-	cout << result;
-	file << result;
+	Matrix<double> res(integrator.NSteps(start_t, number_of_steps, h, prev_s, 1));
+	std::ofstream file("A.csv");
+	//cout << res;
+	file << res;
 	file.close();
+	//calculation of each moment of speed for RK A with 'b_main'
+	//MakeSpeedDiagram("SpeedsOfMethodAmain.csv", h, number_of_steps, start_t, result);
 
-	//рассчитаем в каждый из моментов времени скорости для каждой полученной точки
-	//MakeSpeedDiagram("SpeedsOfMethodAmain.csv", h, quantity_of_steps, start_t, result);
+	//RK A with 'b_subs'
+	RKIntegrator<LVOde, RKMethodA> integrator1;
+	Matrix<double> res1(integrator.NSteps(start_t, number_of_steps, h, prev_s, 0));
+	std::ofstream file1("Asubs.csv");
+	//cout << res1;
+	file1 << res1;
+	file1.close();
+	//calculation of each moment of speed for RK A with 'b_subs'
+	//MakeSpeedDiagram("SpeedsOfMethodAsubs.csv", h, number_of_steps, start_t, result);
 
 
-	//для метода А с вектором b_subs
-	std::ofstream file_("MethodAsubs.csv");
-	result = integrator.NSteps(start_t, quantity_of_steps, h, prev_s, 0);
-	file << result;
-	file_.close();
-
-	//рассчитаем в каждый из моментов времени скорости для каждой полученной точки
-	//MakeSpeedDiagram("SpeedsOfMethodAsubs.csv", h, quantity_of_steps, start_t, result);
-
-
-	//для метода B с вектором b_main
-	RKIntegrator<LVOde, RKMethodB> integrator2;
-	result = integrator2.NSteps(start_t, quantity_of_steps, h, prev_s, 1);
-	std::ofstream file2("MethodBmain.csv");
-	file << result;
+	////RK B with 'b_main'
+	RKIntegrator<LVOde, RKMethodA> integrator2;
+	Matrix<double> res2(integrator.NSteps(start_t, number_of_steps, h, prev_s, 1));
+	std::ofstream file2("B.csv");
+	//cout << res2;
+	file2 << res2;
 	file2.close();
-
-	//рассчитаем в каждый из моментов времени скорости для каждой полученной точки
-	//MakeSpeedDiagram("SpeedsOfMethodBmain.csv", h, quantity_of_steps, start_t, result);
-
-
-	//для метода B с вектором b_subs
-	std::ofstream file2_("MethodBsubs.csv");
-	result = integrator2.NSteps(start_t, quantity_of_steps, h, prev_s, 0);
-	file << result;
-	file2_.close();
-
-	//рассчитаем в каждый из моментов времени скорости для каждой полученной точки
-	//MakeSpeedDiagram("SpeedsOfMethodBsubs.csv", h, quantity_of_steps, start_t, result);
+	//calculation of each moment of speed for RK B with 'b_main'
+    //MakeSpeedDiagram("SpeedsOfMethodBmain.csv", h, number_of_steps, start_t, result);
 
 
-	//попробуем изменить h для того, чтобы получить меньшую точность
-	h = 0.5;
-	quantity_of_steps = (final_t - start_t) / h;
-	std::ofstream minifile("file_for_fun.csv");
-	result = integrator.NSteps(start_t, quantity_of_steps, h, prev_s, 1);
-	file << result;
-	minifile.close();
-
-	//рассчитаем в каждый из моментов времени скорости для каждой полученной точки
-	//MakeSpeedDiagram("Speeds_for_fun.csv", h, quantity_of_steps, start_t, result);
-
-	//проверка того что метод OneStep действительно работает на примере вызова ниже
-//	cout << "Method OneStep really work - first step is " << integrator2.OneStep(start_t, h, prev_s, 0);
-
+	//RK B with 'b_subs'
+	RKIntegrator<LVOde, RKMethodA> integrator3;
+	Matrix<double> res3(integrator.NSteps(start_t, number_of_steps, h, prev_s, 0));
+	std::ofstream file3("Bsubs.csv");
+	//cout << res3;
+	file3 << res3;
+	file3.close();
+	//calculation of each moment of speed for RK B with 'b_subs'
+    //MakeSpeedDiagram("SpeedsOfMethodBsubs.csv", h, number_of_steps, start_t, result);мож
 }
 
 

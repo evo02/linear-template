@@ -103,9 +103,9 @@ public:
 
 	//operators for vector&vector
 	Vector& operator+=(const Vector& pam) { if (data_.size() != pam.size()) { throw Vector_WrongSize{}; } data_ += pam.data();  return *this; }
-	Vector& operator-=(const Vector& pam) { if (data_.size() != pam.size()) { throw Vector_WrongSize{}; } *this -= pam;  return *this; }
-	Vector& operator/=(const Vector& pam) { if (data_.size() != pam.size()) { throw Vector_WrongSize{}; } *this /= pam;  return *this; }
-	Vector& operator*=(const Vector& pam) { if (data_.size() != pam.size()) { throw Vector_WrongSize{}; } *this *= pam;  return *this; }
+	Vector& operator-=(const Vector& pam) { if (data_.size() != pam.size()) { throw Vector_WrongSize{}; } data_ -= pam.data();  return *this; }
+	Vector& operator/=(const Vector& pam) { if (data_.size() != pam.size()) { throw Vector_WrongSize{}; } data_ /= pam.data();  return *this; }
+	Vector& operator*=(const Vector& pam) { if (data_.size() != pam.size()) { throw Vector_WrongSize{}; } data_ *= pam.data();  return *this; }
 
 	bool operator==(const Vector& pam) { data_ == pam.data() ? true : false; }
 	bool operator!=(const Vector& pam) { data_ != pam.data() ? true : false; }

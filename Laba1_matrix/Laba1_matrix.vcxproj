@@ -122,16 +122,16 @@
     <ClInclude Include="Vector.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="A.csv" />
+    <None Include="Asubs.csv" />
+    <None Include="B.csv" />
+    <None Include="Bsubs.csv" />
     <None Include="MethodAmain.csv" />
-    <None Include="MethodAsubs.csv" />
-    <None Include="MethodBmain.csv" />
-    <None Include="MethodBsubs.csv" />
     <None Include="RKMethod.hpp" />
     <None Include="exceptions.inl" />
     <None Include="in.csv" />
     <None Include="Matrix.inl" />
     <None Include="out.csv" />
-    <None Include="SpeedsOfMethodAmain.csv" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="connect.hpp" />
