@@ -24,6 +24,11 @@ public:
 	// vector to matrix for overload operators(vector-column)
 	explicit Matrix(Vector<T> vect) : rows_(vect.size()), cols_(1), data_(vect.data()) {  }
 
+	//construct with initializer_list<initializer_list<T>>
+	Matrix(size_t rows, size_t columns, const std::initializer_list<T>& pam) : rows_(rows), cols_(columns), data_(pam.size()) { std::copy(pam.begin(), pam.end(), &data_[0]); }
+
+	//construct with Vector<Vector<T>>
+	//Matrix(Vector<Vector<T>> pam) : rows_(pam.size()->size()), cols_(pam.begin()),
 
 	//destructor
 	~Matrix() {  } 
@@ -45,6 +50,7 @@ public:
 	//move assignment operator
 	Matrix& operator=(const Matrix&& pam) { rows_ = pam.Rows(); cols_ = pam.Cols(); data_ = pam.Array();  return *this; } 
 
+	//Matrix& operator=(, const Vector<T>) { }
 
 	//access to matrix class values
 	size_t Rows() const { return rows_; }
@@ -54,8 +60,7 @@ public:
 
 	//operator(m, n)
 	T & operator()(size_t Row, size_t Col) { return data_[Row * cols_ + Col]; }
-	T operator()(size_t Row, size_t Col) const { return data_[Row * cols_ + Col]; };
-
+	const T & operator()(size_t Row, size_t Col) const { return data_[Row * cols_ + Col]; };
 
 	//operator[m x n], 
 	//for example in matrix
@@ -63,8 +68,8 @@ public:
 	//4 5 6
 	//7 8 9
 	//example[7] = 8, numbering as in valarray
-	T& operator[](const size_t index) { return data_[index]; }
-	const T& operator[](const size_t index) const { return data_[index]; }
+	T & operator[](const size_t index) { return data_[index]; }
+	const T & operator[](const size_t index) const { return data_[index]; }
 
 
 
@@ -109,6 +114,8 @@ public:
 		return res;
 	}
 
+	
+
 
 	//numpy slice analog for matrix
 	Matrix slice(const size_t row_begin, const size_t row_end, const size_t row_step,
@@ -124,13 +131,22 @@ public:
 		return res;
 	}
 
+
 	//slices
-	std::valarray<T> row(size_t r) const { return data_[std::slice(r * Cols(), Cols(), 1)]; }
-	std::valarray<T> col(size_t c) const { return data_[std::slice(c, Rows(), Cols())]; }
+	//Vector<T> row(size_t r) { return Vector<T>(data_[std::slice(r * Cols(), Cols(), 1)]); };
+	//Vector<T> col(size_t c) { return Vector<T>(data_[std::slice(c, Rows(), Cols())] ); }
+
+	Matrix<T> setRow(size_t r, Vector<T> row) {
+		for (size_t j{ 0 }; j < row.size(); j++)
+			data_[r*cols_ + j] = row[j];
+		return *this;
+		}
 
 	std::slice_array<T> row(size_t r) { return data_[std::slice(r * Cols(), Cols(), 1)]; }
 	std::slice_array<T> col(size_t c) { return data_[std::slice(c, Rows(), Cols())]; }
 
+	std::valarray<T> row(size_t r) const { return data_[std::slice(r * Cols(), Cols(), 1)]; }
+	std::valarray<T> col(size_t c) const { return data_[std::slice(c, Rows(), Cols())]; }
 	
 	//overload operators for scalars
 	Matrix& operator*=(const T scalar) { data_ *= scalar; return *this; }

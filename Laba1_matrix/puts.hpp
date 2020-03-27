@@ -7,7 +7,7 @@ std::ostream& operator<<(std::ostream & os, const Matrix<T> & m)
 	for (size_t i{ 0 }; i < m.Rows(); ++i) 
 	{
 		for (size_t j{ 0 }; j < m.Cols(); ++j)
-			os << ' ' << m(i, j);
+			os << m(i, j) << ';';
 		os << '\n';
 	}
 	os << std::flush;
@@ -27,7 +27,7 @@ template<typename T>
 std::ostream& operator<<(std::ostream & os, const Vector<T> & m)
 {
 	for (size_t i{ 0 }; i < m.size(); ++i)
-		os << m[i] << '\n';
+		os << m[i] << " ";
 	os << '\n';// << std::flush;
 	return os;
 }
@@ -73,4 +73,7 @@ void wCSV(std::ofstream& f, Matrix<T> m)
 		f << std::endl;
 	}
 }
+
+
+
 

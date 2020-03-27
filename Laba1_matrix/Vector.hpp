@@ -16,6 +16,9 @@ public:
 
 	//constuctor for creating vector from valarray
 	explicit Vector(std::valarray<T> Arr) : data_(Arr) {  }
+
+	//construct with initializer_list
+	Vector(const std::initializer_list<T>& pam) : data_(pam.size()) { std::copy(pam.begin(), pam.end(), &data_[0]); }
 	
 	//destructor
 	~Vector() {  }
@@ -27,14 +30,13 @@ public:
 	Vector(const Vector && pam) : data_(pam.data()) {  }
 
 	//copy assignment operator
-	Vector& operator=(const Vector& pam) { Vector copy(pam); copy.swap(*this); return *this; }
+	Vector& operator=(const Vector& pam) { data_ = pam.data_; return *this; }
 
 	//move assignment operator
-	Vector& operator=(const Vector&& pam) { pam.swap(*this);  return *this; }
+	Vector& operator=(Vector&& pam) noexcept { data_ = pam.data_;  return *this; }
 
-	//operator example(i)
-	T & operator()(size_t Col) { return data_[Col]; }
-	T operator()(size_t Col) const { return data_[Col]; };
+	//valarray operator=
+	Vector& operator=(std::valarray<T>& pam) { data_(pam); return *this; }
 
 	//operator example[i]
 	T& operator[](const size_t index) { return data_[index]; }
@@ -65,7 +67,6 @@ public:
 			i = _Func(i);
 		return res;
 	}
-
 
 	//apply for vector
 	Vector apply(T _Func(T))
@@ -100,22 +101,11 @@ public:
 	Vector& operator-=(const T scalar) { data_ -= scalar; return *this; }
 	Vector& operator+=(const T scalar) { data_ += scalar; return *this; }
 
-	Vector operator*(const T scalar) { Vector<T> pam(data_ * scalar); return pam; }
-	Vector operator/(const T scalar) { Vector<T> pam(data_ / scalar); return pam; }
-	Vector operator-(const T scalar) { Vector<T> pam(data_ - scalar); return pam; }
-	Vector operator+(const T scalar) { Vector<T> pam(data_ + scalar); return pam; }
-
-
 	//operators for vector&vector
-	Vector& operator+=(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } *this += pam;  return *this; }
-	Vector& operator-=(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } *this -= pam;  return *this; }
-	Vector& operator/=(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } *this /= pam;  return *this; }
-	Vector& operator*=(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } *this *= pam;  return *this; }
-
-	Vector operator+(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } Vector<T> res(data_ + pam.data());  return res; }
-	Vector operator-(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } Vector<T> res(data_ - pam.data());  return res; }
-	Vector operator/(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } Vector<T> res(data_ / pam.data());  return res; }
-	Vector operator*(const Vector& pam) { if (size() != pam.size()) { throw Vector_WrongSize{}; } Vector<T> res(data_ * pam.data());  return res; }
+	Vector& operator+=(const Vector& pam) { if (data_.size() != pam.size()) { throw Vector_WrongSize{}; } data_ += pam.data();  return *this; }
+	Vector& operator-=(const Vector& pam) { if (data_.size() != pam.size()) { throw Vector_WrongSize{}; } *this -= pam;  return *this; }
+	Vector& operator/=(const Vector& pam) { if (data_.size() != pam.size()) { throw Vector_WrongSize{}; } *this /= pam;  return *this; }
+	Vector& operator*=(const Vector& pam) { if (data_.size() != pam.size()) { throw Vector_WrongSize{}; } *this *= pam;  return *this; }
 
 	bool operator==(const Vector& pam) { data_ == pam.data() ? true : false; }
 	bool operator!=(const Vector& pam) { data_ != pam.data() ? true : false; }

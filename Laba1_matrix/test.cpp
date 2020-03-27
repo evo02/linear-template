@@ -1,5 +1,79 @@
 #include "connect.hpp"
 
+using std::cout;
+using std::cin;
+using std::valarray;
+using std::slice_array;
+using std::endl;
+
+void testSecond()
+{
+	//инициализация необходимых данных требуемыми в задании
+	Vector<double> prev_s = { 1.0, 1.0 };
+	//Matrix<double> prev_s(pam);
+	double start_t = 0, final_t = 10;
+	//произвольно возьмем достаточно маленький шаг для получения достаточной точности
+	double h = 0.01;
+	int quantity_of_steps = (final_t - start_t) / h;
+	//для каждого из доступных вариантов интегрирования реализуем подсчеты и занесем из в файл
+	//для метода А с вектором b_main
+	RKIntegrator<LVOde, RKMethodA> integrator;
+	Matrix<double> result(integrator.NSteps(start_t, quantity_of_steps, h, prev_s, 1));
+	std::ofstream file("MethodAmain.csv");
+	cout << result;
+	file << result;
+	file.close();
+
+	//рассчитаем в каждый из моментов времени скорости для каждой полученной точки
+	//MakeSpeedDiagram("SpeedsOfMethodAmain.csv", h, quantity_of_steps, start_t, result);
+
+
+	//для метода А с вектором b_subs
+	std::ofstream file_("MethodAsubs.csv");
+	result = integrator.NSteps(start_t, quantity_of_steps, h, prev_s, 0);
+	file << result;
+	file_.close();
+
+	//рассчитаем в каждый из моментов времени скорости для каждой полученной точки
+	//MakeSpeedDiagram("SpeedsOfMethodAsubs.csv", h, quantity_of_steps, start_t, result);
+
+
+	//для метода B с вектором b_main
+	RKIntegrator<LVOde, RKMethodB> integrator2;
+	result = integrator2.NSteps(start_t, quantity_of_steps, h, prev_s, 1);
+	std::ofstream file2("MethodBmain.csv");
+	file << result;
+	file2.close();
+
+	//рассчитаем в каждый из моментов времени скорости для каждой полученной точки
+	//MakeSpeedDiagram("SpeedsOfMethodBmain.csv", h, quantity_of_steps, start_t, result);
+
+
+	//для метода B с вектором b_subs
+	std::ofstream file2_("MethodBsubs.csv");
+	result = integrator2.NSteps(start_t, quantity_of_steps, h, prev_s, 0);
+	file << result;
+	file2_.close();
+
+	//рассчитаем в каждый из моментов времени скорости для каждой полученной точки
+	//MakeSpeedDiagram("SpeedsOfMethodBsubs.csv", h, quantity_of_steps, start_t, result);
+
+
+	//попробуем изменить h для того, чтобы получить меньшую точность
+	h = 0.5;
+	quantity_of_steps = (final_t - start_t) / h;
+	std::ofstream minifile("file_for_fun.csv");
+	result = integrator.NSteps(start_t, quantity_of_steps, h, prev_s, 1);
+	file << result;
+	minifile.close();
+
+	//рассчитаем в каждый из моментов времени скорости для каждой полученной точки
+	//MakeSpeedDiagram("Speeds_for_fun.csv", h, quantity_of_steps, start_t, result);
+
+	//проверка того что метод OneStep действительно работает на примере вызова ниже
+//	cout << "Method OneStep really work - first step is " << integrator2.OneStep(start_t, h, prev_s, 0);
+
+}
 
 
 //csv reader to matrix
@@ -26,11 +100,6 @@ Matrix<double> rCSV(std::istream & is)
 	return Matrix<double>(rows, a);
 }
 
-using std::cout;
-using std::cin;
-using std::valarray;
-using std::slice_array;
-using std::endl;
 
 void testConstructors() {
 
@@ -96,7 +165,7 @@ void testOperators()
 }
 
 
-
+/*
 void testRowsAndCols() {
 
 	std::cout << "\n\n\nRunning Row/Col Accessor Tests\n\n";
@@ -107,9 +176,9 @@ void testRowsAndCols() {
 	Matrix<int> m1(x, y, v);
 	cout << "\nTesting: std::valarray<T> row(std::size_t r) const;\n";
 
-	valarray<int> r1 = m1.row(0);
-	valarray<int> r2 = m1.row(1);
-	valarray<int> r3 = m1.row(2);
+//	valarray<int> r1 = m1.row(0);
+	//valarray<int> r2 = m1.row(1);
+	//valarray<int> r3 = m1.row(2);
 
 	cout << "row 1:\n";
 	cout << r1;
@@ -149,10 +218,10 @@ void testRowsAndCols() {
 
 	cout << "\nTesting: std::slice_array<T> col(std::size_t r);\n";
 
-	slice_array<int> cs1 = m1.col(0);
-	slice_array<int> cs2 = m1.col(1);
-	slice_array<int> cs3 = m1.col(2);
-	slice_array<int> cs4 = m1.col(3);
+	//slice_array<int> cs1 = m1.col(0);
+	//slice_array<int> cs2 = m1.col(1);
+	//slice_array<int> cs3 = m1.col(2);
+	//slice_array<int> cs4 = m1.col(3);
 
 	cout << "col 1:\n";
 	cout << cs1;
@@ -162,7 +231,7 @@ void testRowsAndCols() {
 	cout << cs3;
 	cout << "col 4:\n";
 	cout << cs4;
-}
+}*/
 
 
 void testCSV()
@@ -190,8 +259,18 @@ void testMatrix2d() {
 }
 
 
-int main(int argc, char** argv) {
-
-	testMatrix2d();
+int main(int argc, char** argv) 
+{
+	cout << "TestMatrix(1) or TestRK(2)";
+	size_t choice;
+	//cin >> choice;
+	//switch (choice)
+	//{
+	//case 1:
+		//testMatrix2d();
+	//case 2:
+		testSecond();
+	//}
+	cout << "exit success";
  	return (EXIT_SUCCESS);
 }

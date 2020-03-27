@@ -100,3 +100,52 @@ bool operator!=(const Matrix<T>& leftMatrix, const Matrix<T>& rightMatrix)
 	return !(leftMatrix == rightMatrix);
 }
 
+template<class T>
+Vector<T> operator+(const T& scalar, const Vector<T>& rightVector)
+{
+	Vector<T> res(rightVector);
+	res += scalar;
+	return res;
+}
+
+template<class T>
+Vector<T> operator+(const Vector<T>& rightVector,  const T& scalar)
+{
+	Vector<T> res(rightVector);
+	res += scalar;
+	return res;
+}
+
+template<class T>
+Vector<T> operator+(const Vector<T>& leftVector, const Vector<T>& rightVector)
+{
+	if (leftVector.size() != rightVector.size()) { throw Vector_WrongSize{}; }
+	Vector<T> res(leftVector);
+	res += rightVector;
+	return res;
+}
+
+template<class T>
+Vector<T> operator*(const Vector<T>& leftVector, const Vector<T>& rightVector)
+{
+	if (leftVector.size() != rightVector.size()) { throw Vector_WrongSize{}; }
+	Vector<T> res(leftVector);
+	res *= rightVector;
+	return res;
+}
+
+template<class T>
+Vector<T> operator*(const T& scalar, const Vector<T>& rightVector)
+{
+	Vector<T> res(rightVector);
+	res *= scalar;
+	return res;
+}
+
+template<class T>
+Vector<T> operator*(const Vector<T>& rightVector, const T& scalar)
+{
+	Vector<T> res(rightVector);
+	res *= scalar;
+	return res;
+}

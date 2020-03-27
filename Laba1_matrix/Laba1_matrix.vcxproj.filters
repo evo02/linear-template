@@ -18,10 +18,16 @@
     <ClInclude Include="Vector.hpp">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="puts.hpp">
+    <ClInclude Include="Matrix.hpp">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
-    <ClInclude Include="Matrix.hpp">
+    <ClInclude Include="puts.hpp">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="RKIntegrator.hpp">
+      <Filter>Исходные файлы</Filter>
+    </ClInclude>
+    <ClInclude Include="LVOde.hpp">
       <Filter>Исходные файлы</Filter>
     </ClInclude>
   </ItemGroup>
@@ -38,13 +44,31 @@
     <None Include="exceptions.inl">
       <Filter>Файлы заголовков</Filter>
     </None>
+    <None Include="RKMethod.hpp">
+      <Filter>Исходные файлы</Filter>
+    </None>
+    <None Include="MethodAmain.csv">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="MethodAsubs.csv">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="MethodBmain.csv">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="MethodBsubs.csv">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
+    <None Include="SpeedsOfMethodAmain.csv">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="test.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="connect.hpp">
-      <Filter>Исходные файлы</Filter>
+      <Filter>Файлы заголовков</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -115,15 +115,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="LVOde.hpp" />
+    <ClInclude Include="RKIntegrator.hpp" />
     <ClInclude Include="Matrix.hpp" />
     <ClInclude Include="puts.hpp" />
     <ClInclude Include="Vector.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="MethodAmain.csv" />
+    <None Include="MethodAsubs.csv" />
+    <None Include="MethodBmain.csv" />
+    <None Include="MethodBsubs.csv" />
+    <None Include="RKMethod.hpp" />
     <None Include="exceptions.inl" />
     <None Include="in.csv" />
     <None Include="Matrix.inl" />
     <None Include="out.csv" />
+    <None Include="SpeedsOfMethodAmain.csv" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="connect.hpp" />

@@ -23,5 +23,7 @@
 #include "Matrix.hpp"
 #include "Matrix.inl"
 #include "puts.hpp"
-
+#include "RKMethod.hpp"
+#include "RKIntegrator.hpp"
+#include "LVOde.hpp"
 
